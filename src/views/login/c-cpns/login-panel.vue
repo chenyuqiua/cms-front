@@ -71,7 +71,7 @@
             <el-link class="changePwd" type="success" :underline="false"> 修改密码 </el-link>
           </div>
 
-          <el-button type="success" size="large" class="login-btn" @click="userLogin">
+          <el-button type="success" round size="large" class="login-btn" @click="userLogin">
             立即登录
           </el-button>
         </div>
@@ -355,10 +355,53 @@ function userLogin() {
       }
 
       .login-btn {
+        position: relative;
         width: 100%;
         background-color: var(--login-primary);
         letter-spacing: 5px;
         border-color: var(--login-primary);
+      }
+
+      // 登录按钮小动画
+      :deep(.el-button > span) {
+        position: absolute;
+        left: 0;
+        right: 0;
+        z-index: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        height: 100%;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(255, 255, 255, 0.2);
+
+        color: #fff;
+        background: rgba(255, 255, 255, 0.05);
+
+        letter-spacing: 1px;
+        text-decoration: none;
+        overflow: hidden;
+        backdrop-filter: blur(15px);
+        transition: 0.5s;
+      }
+
+      :deep(.el-button > span)::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(to left, rgba(255, 255, 255, 0.15), transparent);
+        transform: skewX(45deg) translateX(0);
+        transition: 0.5s;
+      }
+
+      :deep(.el-button:hover > span)::before {
+        transform: skew(45deg) translateX(200%);
       }
     }
   }
