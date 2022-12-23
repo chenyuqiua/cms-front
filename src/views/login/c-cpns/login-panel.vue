@@ -87,6 +87,7 @@ import { ref, reactive, watch } from "vue"
 import useLoginStore from "@/store/login/login"
 import type { IAccount } from "@/types"
 import { localCache } from "@/utils/cache"
+import { storeToRefs } from "pinia"
 
 // 定义常量
 const CACHE_NAME = "name"
@@ -165,6 +166,7 @@ watch(isRemPwd, (newValue) => {
 
 // 获取store
 const loginStore = useLoginStore()
+const { errMsg } = storeToRefs(loginStore)
 // 登录按钮的点击事件/登录相关逻辑
 function userLogin() {
   // 记住密码点击登陆时, 对表单进行一次校验
@@ -176,11 +178,18 @@ function userLogin() {
     return
   }
 
+  if (errMsg.value != "") {
+    ElMessage.error(errMsg.value)
+    errMsg.value = ""
+    return
+  }
+
   // 用户输入的账号和密码
   const name = loginUser.name
   const password = loginUser.password
   // 携带账号密码通过派发Action
   loginStore.accountLoginAction({ name, password }).then(() => {
+    ElMessage.success("登录成功!")
     // 登录成功后判断是否记住密码
     if (isRemPwd.value) {
       localCache.setCache(CACHE_NAME, name)

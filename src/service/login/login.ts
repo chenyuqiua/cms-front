@@ -19,6 +19,7 @@ export function getUserInfoById(id: number) {
 // 根据角色信息获取到权限信息(菜单信息)
 export function getUserMenusByRoleId(id: number) {
   return hyRequest.get({
-    url: `role/${id}/menu`
+    // url: `/role/${id}/menu`
+    url: `/menus/roles/${id}`
   })
 }
