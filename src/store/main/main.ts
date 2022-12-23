@@ -1,14 +1,16 @@
-import { selectDepListData, selectRoleListData } from "@/service/main/main"
+import { selectDepListData, selectMenuListData, selectRoleListData } from "@/service/main/main"
 import { defineStore } from "pinia"
 
 interface IMainStore {
   entireRoles: any[]
   entireDeps: any[]
+  entireMenus: any[]
 }
 const useMainStore = defineStore("main", {
   state: (): IMainStore => ({
     entireRoles: [],
-    entireDeps: []
+    entireDeps: [],
+    entireMenus: []
   }),
   actions: {
     async fetchSelectRoleListAction(queryInfo: any) {
@@ -17,7 +19,10 @@ const useMainStore = defineStore("main", {
     },
     async fetchSelectDepListAction(queryInfo: any) {
       const depListResult = await selectDepListData(queryInfo)
+      const menuListResult = await selectMenuListData(queryInfo)
+
       this.entireDeps = depListResult.data.list
+      this.entireMenus = menuListResult.data.list
     }
   }
 })

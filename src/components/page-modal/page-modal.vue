@@ -9,13 +9,7 @@
       <!-- 动态生成表单区域 -->
       <div class="form">
         <el-form :model="formData" label-width="80px" size="large" :rules="rules" ref="formRef">
-          <page-form
-            :form-items="modalConfig.formItems"
-            :form-data="formData"
-            :span="24"
-            :gutter="0"
-          />
-          <!-- <template v-for="item in modalConfig.formItems" :key="item.props">
+          <template v-for="item in modalConfig.formItems" :key="item.props">
             <el-form-item :label="item.label" :prop="item.prop">
               <template v-if="item.type === 'input'">
                 <el-input v-model="formData[item.prop]" :placeholder="item.placeholder" />
@@ -40,8 +34,11 @@
                   </template>
                 </el-select>
               </template>
+              <template v-if="item.type === 'custom'">
+                <slot :name="item.slotName"></slot>
+              </template>
             </el-form-item>
-          </template> -->
+          </template>
         </el-form>
       </div>
 
@@ -62,7 +59,6 @@ import { ElForm, ElMessage } from "element-plus"
 
 import useSystemStore from "@/store/main/system/system"
 import type { IFormItems } from "@/global/components-type"
-import pageForm from "@/components/page-form/page-form.vue"
 
 interface IProps {
   modalConfig: {
@@ -73,6 +69,7 @@ interface IProps {
     }
     formItems: IFormItems[]
   }
+  otherInfo?: any
 }
 const props = defineProps<IProps>()
 
@@ -124,14 +121,27 @@ function handleConfirmClick() {
       // 表单校验成功的操作
       // 关闭窗口修改数据
       dialogVisible.value = false
+
+      // 合并otherInfo的其他请求信息
+      let infoData = formData
+      if (props.otherInfo) {
+        // 目前只支持分配一级菜单权限, 过滤二级菜单(支持时删除filter过滤即可)
+        const newMenuList = props.otherInfo.menuList.filter((item: any) => {
+          if (item < 10) return item
+        })
+
+        props.otherInfo.menuList = newMenuList
+        infoData = { ...infoData, ...props.otherInfo }
+      }
+
       if (isNewRef.value) {
         // 发送新建数据网络请求
-        await systemStore.createPageDataAction(props.modalConfig.pageName, formData)
+        await systemStore.createPageDataAction(props.modalConfig.pageName, infoData)
       } else {
         // 发送修改数据网络请求
         await systemStore.updatePageDataAction(props.modalConfig.pageName, {
           id: updateId.value,
-          ...formData
+          ...infoData
         })
       }
 

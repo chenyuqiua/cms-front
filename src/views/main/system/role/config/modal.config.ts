@@ -6,7 +6,8 @@ const modalConfig = {
   },
   formItems: [
     { type: "input", label: "角色名称", prop: "name", placeholder: "请输入角色名称" },
-    { type: "input", label: "角色描述", prop: "intro", placeholder: "请输入角色描述" }
+    { type: "input", label: "角色描述", prop: "intro", placeholder: "请输入角色描述" },
+    { type: "custom", prop: "", slotName: "menuList", placeholder: "请分配权限" }
   ]
 }
 

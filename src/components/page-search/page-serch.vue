@@ -3,13 +3,7 @@
     <!-- 表单相关 -->
     <el-form :model="searchForm" label-width="80px" size="large" ref="formRef">
       <el-row :gutter="20">
-        <page-form
-          :form-items="searchConfig.formItems"
-          :form-data="searchForm"
-          :gutter="20"
-          :span="8"
-        />
-        <!-- <template v-for="item in searchConfig.formItems" :key="item.props">
+        <template v-for="item in searchConfig.formItems" :key="item.props">
           <el-col :span="8">
             <el-form-item :label="item.label" :prop="item.prop">
               <template v-if="item.type === 'input'">
@@ -37,7 +31,7 @@
               </template>
             </el-form-item>
           </el-col>
-        </template> -->
+        </template>
       </el-row>
     </el-form>
 
@@ -55,7 +49,6 @@ import type { ElForm } from "element-plus"
 import { reactive, ref } from "vue"
 
 import type { IFormItems } from "@/global/components-type"
-import pageForm from "@/components/page-form/page-form.vue"
 
 interface IProps {
   searchConfig: {
@@ -90,10 +83,10 @@ function handelSelectClick() {
   padding: 20px;
   background-color: #fff;
 
-  // .el-form-item {
-  //   padding: 20px;
-  //   margin-bottom: 0;
-  // }
+  .el-form-item {
+    padding: 20px;
+    margin-bottom: 0;
+  }
 
   .footer {
     display: flex;

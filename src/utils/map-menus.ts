@@ -68,3 +68,24 @@ export function mapPathToMenu(path: string, userMenus: any[], isAll = false, isS
     }
   }
 }
+
+/**
+ * 根据权限菜单映射出id列表
+ * @param menuList 权限菜单
+ */
+export function mapMenuListToIds(menuList: any[]) {
+  const ids: number[] = []
+
+  recurseGetIds(menuList)
+  function recurseGetIds(menuList: any[]) {
+    for (const item of menuList) {
+      if (item.children) {
+        recurseGetIds(item.children)
+      } else {
+        ids.push(item.id)
+      }
+    }
+  }
+
+  return ids
+}

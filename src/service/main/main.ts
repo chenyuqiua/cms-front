@@ -23,3 +23,15 @@ export function selectDepListData(queryInfo: any) {
     data: queryInfo
   })
 }
+
+/**
+ * 查询全部菜单信息
+ * @param queryInfo
+ * @returns
+ */
+export function selectMenuListData(queryInfo: any = {}) {
+  return hyRequest.post({
+    url: "/menus/list",
+    data: queryInfo
+  })
+}

@@ -1,44 +1,59 @@
 <template>
   <div class="user">
-    <user-search @query-click="handelQueryClick" @reset-click="handelResetClick" />
-    <user-content ref="contentRef" @new-click="handelNewClick" @update-click="handleUpdateClick" />
-    <user-modal ref="modalRef" />
+    <user-search
+      :search-config="searchConfig"
+      @query-click="handleQueryClick"
+      @reset-click="handleResetClick"
+    />
+    <user-content
+      :content-config="contentConfig"
+      ref="countenRef"
+      @new-click="handleNewClick"
+      @update-click="handleUpdateClick"
+    />
+    <user-modal :modal-config="modalConfigRef" ref="modalRef" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
+import { computed } from "vue"
 
-import userSearch from "./c-cpns/user-serch.vue"
-import userContent from "./c-cpns/user-content.vue"
-import userModal from "./c-cpns/user-modal.vue"
+import userSearch from "@/components/page-search/page-serch.vue"
+import userContent from "@/components/page-content/page-content.vue"
+import userModal from "@/components/page-modal/page-modal.vue"
+import searchConfig from "./config/search.config"
+import contentConfig from "./config/content.config"
+import modalConfig from "./config/modal.config"
+import usePageContent from "@/hooks/usePageCounten"
+import usePageMoadl from "@/hooks/usePageModal"
+import useMainStore from "@/store/main/main"
 
-interface ISearchForm {
-  name: string
-  realname: string
-  cellphone: string
-  status: number
-  createTime: string
-}
-// 对content子组件绑定ref
-const contentRef = ref<InstanceType<typeof userContent>>()
-// 监听search子组件自定义事件, 对content子组件进行操作
-function handelQueryClick(formData: ISearchForm) {
-  contentRef.value?.fetchUserListData(formData)
-}
-function handelResetClick() {
-  contentRef.value?.fetchUserListData()
-}
+const { countenRef, handleQueryClick, handleResetClick } = usePageContent()
+const { modalRef, handleNewClick, handleUpdateClick } = usePageMoadl()
 
-// 对modal子组件绑定ref
-const modalRef = ref<InstanceType<typeof userModal>>()
-// 监听content子组件自定义事件, 对modal子组件进行操作
-function handelNewClick() {
-  modalRef.value?.setDialogVisible()
-}
-function handleUpdateClick(itemData: any) {
-  modalRef.value?.setDialogVisible(false, itemData)
-}
+// 为modalConfig中的数据, 注入动态数据
+const modalConfigRef = computed(() => {
+  const mainStore = useMainStore()
+
+  // 映射角色和部门到一个新数组中
+  const roles = mainStore.entireRoles.map((item) => {
+    return { label: item.name, value: item.id }
+  })
+  const deps = mainStore.entireDeps.map((item) => {
+    return { label: item.name, value: item.id }
+  })
+
+  // 动态注入数据
+  modalConfig.formItems.forEach((item: any) => {
+    if (item.prop === "roleId") {
+      item.options.push(...roles)
+    }
+    if (item.prop === "depId") {
+      item.options.push(...deps)
+    }
+  })
+  return modalConfig
+})
 </script>
 
 <style lang="less" scoped>

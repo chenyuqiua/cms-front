@@ -7,7 +7,12 @@
       </el-button>
     </div>
     <div class="table">
-      <el-table :data="pageList" style="width: 100%" :row-class-name="tableRowClassName">
+      <el-table
+        :data="pageList"
+        style="width: 100%"
+        :row-class-name="tableRowClassName"
+        v-bind="contentConfig.childrenTree"
+      >
         <template v-for="item in contentConfig.propsList" :key="item.prop">
           <!-- 创建/修改人类型 -->
           <template v-if="item.type === 'user' && item.prop !== undefined">
@@ -57,7 +62,7 @@
         </template>
       </el-table>
     </div>
-    <div class="footer">
+    <div class="footer" v-if="contentConfig.isFooterShow">
       <el-pagination
         v-model:current-page="currentPage"
         v-model:page-size="pageSize"
@@ -80,7 +85,7 @@ import { ElMessage } from "element-plus"
 import { localCache } from "@/utils/cache"
 
 interface IPropsList {
-  type: string // 展示类型
+  type?: string // 展示类型
   label: string // 字段名
   prop?: string // 绑定的变量
   width?: string // 表格字段宽度
@@ -93,7 +98,9 @@ interface IProps {
       title?: string // 表格标题
       btnText?: string // 按钮文本
     }
+    isFooterShow?: boolean // 不是分页查询时, 不显示分页条
     propsList: IPropsList[]
+    childrenTree?: any // 菜单子树配置
   }
 }
 const props = defineProps<IProps>()

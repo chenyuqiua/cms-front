@@ -74,7 +74,7 @@ const useSystemStore = defineStore("system", {
     },
     // 针对页面数据的增删改查
     async selectPageListAction(pageName: any, queryInfo: any) {
-      // 没有传事件时, 默认为一个空数组
+      // 没有传时间时, 默认为一个空数组
       if (queryInfo.createTime === "") {
         queryInfo.createTime = []
       }
